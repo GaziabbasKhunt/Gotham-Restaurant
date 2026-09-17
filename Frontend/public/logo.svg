@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FACC15" />
+      <stop offset="100%" stop-color="#A16207" />
+    </linearGradient>
+  </defs>
+  <!-- Bright Gold Circle matching tailwind from-gold-400 to-gold-700 -->
+  <circle cx="50" cy="50" r="48" fill="url(#goldGradient)" />
+  
+  <!-- Crossed Knife & Fork Icon in solid black (#000000) -->
+  <g fill="none" stroke="#000000" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Knife diagonal shaft -->
+    <path d="M 34 34 L 66 66" />
+    <!-- Knife blade -->
+    <path d="M 34 34 Q 46 22 48 38 L 38 48 Z" fill="#000000" stroke="#000000" stroke-width="2" />
+    
+    <!-- Fork diagonal shaft -->
+    <path d="M 66 34 L 34 66" />
+    <!-- Fork prongs -->
+    <path d="M 66 34 L 58 42" stroke-width="5" />
+    <path d="M 60 28 L 52 36" stroke-width="5" />
+    <path d="M 72 40 L 64 48" stroke-width="5" />
+  </g>
+</svg>
