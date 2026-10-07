@@ -7,7 +7,7 @@ import { CategoryCard } from '../components/menu/CategoryCard';
 import { FoodDetails } from '../components/menu/FoodDetails';
 import { Loading } from '../components/common/Loading';
 import { ErrorComponent } from '../components/common/ErrorComponent';
-import { Search, Leaf, Sparkles, ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
+import { Search, Leaf, Sparkles, ChevronLeft, ChevronRight, SlidersHorizontal, Heart } from 'lucide-react';
 
 export const Menu: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -20,11 +20,25 @@ export const Menu: React.FC = () => {
   // Filters state
   const [search, setSearch] = useState<string>('');
   const [vegetarianOnly, setVegetarianOnly] = useState<boolean>(false);
+  const [favoritesOnly, setFavoritesOnly] = useState<boolean>(false);
+  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 
   // Quick view item modal
   const [quickViewItem, setQuickViewItem] = useState<MenuItem | null>(null);
+
+  // Load stored favorite IDs
+  const loadFavorites = () => {
+    const saved = JSON.parse(localStorage.getItem('gotham_favorites') || '[]');
+    setFavoriteIds(saved);
+  };
+
+  useEffect(() => {
+    loadFavorites();
+    window.addEventListener('gotham_favorites_updated', loadFavorites);
+    return () => window.removeEventListener('gotham_favorites_updated', loadFavorites);
+  }, []);
 
   // Load categories on mount
   useEffect(() => {
@@ -50,14 +64,20 @@ export const Menu: React.FC = () => {
           category: selectedCategory === 'all' ? undefined : selectedCategory,
           search: search.trim() || undefined,
           vegetarian: vegetarianOnly ? true : undefined,
-          page,
-          limit: 9
+          page: favoritesOnly ? 1 : page,
+          limit: favoritesOnly ? 50 : 9
         });
 
         if (res.data) {
-          setItems(res.data);
-          if (res.meta?.totalPages) {
+          let fetchedItems = res.data;
+          if (favoritesOnly) {
+            fetchedItems = fetchedItems.filter((i) => favoriteIds.includes(i._id));
+          }
+          setItems(fetchedItems);
+          if (res.meta?.totalPages && !favoritesOnly) {
             setTotalPages(res.meta.totalPages as number);
+          } else {
+            setTotalPages(1);
           }
         }
       } catch (err) {
@@ -68,7 +88,7 @@ export const Menu: React.FC = () => {
     };
 
     fetchMenu();
-  }, [selectedCategory, search, vegetarianOnly, page]);
+  }, [selectedCategory, search, vegetarianOnly, favoritesOnly, favoriteIds, page]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
@@ -89,11 +109,11 @@ export const Menu: React.FC = () => {
       {/* Filter Toolbar & Search Bar */}
       <div className="glass-card rounded-2xl p-6 border border-gold-500/20 space-y-6">
         
-        {/* Search Bar & Veg Toggle */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Search Bar & Veg / Favorites Toggle */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           
           {/* Search Input */}
-          <div className="relative w-full sm:max-w-md">
+          <div className="relative w-full md:max-w-md">
             <Search className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
@@ -107,21 +127,39 @@ export const Menu: React.FC = () => {
             />
           </div>
 
-          {/* Vegetarian Filter Toggle */}
-          <button
-            onClick={() => {
-              setVegetarianOnly(!vegetarianOnly);
-              setPage(1);
-            }}
-            className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl border text-sm font-semibold transition ${
-              vegetarianOnly
-                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 shadow-lg shadow-emerald-500/10'
-                : 'bg-dark-900/80 text-gray-400 border-gray-800 hover:text-emerald-400 hover:border-emerald-500/30'
-            }`}
-          >
-            <Leaf className="w-4 h-4" />
-            <span>Pure Vegetarian Only</span>
-          </button>
+          <div className="flex items-center gap-3 w-full md:w-auto justify-end">
+            {/* Favorites Filter Toggle */}
+            <button
+              onClick={() => {
+                setFavoritesOnly(!favoritesOnly);
+                setPage(1);
+              }}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition ${
+                favoritesOnly
+                  ? 'bg-red-500/20 text-red-400 border-red-500/40 shadow-lg shadow-red-500/10'
+                  : 'bg-dark-900/80 text-gray-400 border-gray-800 hover:text-red-400 hover:border-red-500/30'
+              }`}
+            >
+              <Heart className={`w-4 h-4 ${favoritesOnly || favoriteIds.length > 0 ? 'fill-red-500 text-red-500' : ''}`} />
+              <span>My Favorites ({favoriteIds.length})</span>
+            </button>
+
+            {/* Vegetarian Filter Toggle */}
+            <button
+              onClick={() => {
+                setVegetarianOnly(!vegetarianOnly);
+                setPage(1);
+              }}
+              className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl border text-sm font-semibold transition ${
+                vegetarianOnly
+                  ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 shadow-lg shadow-emerald-500/10'
+                  : 'bg-dark-900/80 text-gray-400 border-gray-800 hover:text-emerald-400 hover:border-emerald-500/30'
+              }`}
+            >
+              <Leaf className="w-4 h-4" />
+              <span>Pure Veg Only</span>
+            </button>
+          </div>
 
         </div>
 
@@ -162,17 +200,22 @@ export const Menu: React.FC = () => {
       ) : items.length === 0 ? (
         <div className="glass-card rounded-2xl p-12 text-center max-w-lg mx-auto border border-gray-800 space-y-4">
           <div className="w-14 h-14 rounded-full bg-gold-500/10 text-gold-400 flex items-center justify-center mx-auto">
-            <SlidersHorizontal className="w-7 h-7" />
+            {favoritesOnly ? <Heart className="w-7 h-7 text-red-400 fill-red-400" /> : <SlidersHorizontal className="w-7 h-7" />}
           </div>
-          <h3 className="font-serif text-xl font-bold text-gray-200">No Dishes Found</h3>
+          <h3 className="font-serif text-xl font-bold text-gray-200">
+            {favoritesOnly ? 'No Favorite Dishes Yet' : 'No Dishes Found'}
+          </h3>
           <p className="text-gray-400 text-sm">
-            No items matched your filter criteria. Try clearing search keywords or selecting another category.
+            {favoritesOnly
+              ? 'Click the heart icon on any dish card to save your favorite dishes here!'
+              : 'No items matched your filter criteria. Try clearing search keywords or selecting another category.'}
           </p>
           <button
             onClick={() => {
               setSearch('');
               setSelectedCategory('all');
               setVegetarianOnly(false);
+              setFavoritesOnly(false);
               setPage(1);
             }}
             className="px-5 py-2.5 rounded-xl bg-gold-500 text-black font-bold text-xs uppercase tracking-wider gold-glow"
@@ -193,7 +236,7 @@ export const Menu: React.FC = () => {
       )}
 
       {/* Pagination Controls */}
-      {!loading && totalPages > 1 && (
+      {!loading && !favoritesOnly && totalPages > 1 && (
         <div className="flex items-center justify-center gap-4 pt-8">
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}

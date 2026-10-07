@@ -29,6 +29,7 @@ export const MenuCard: React.FC<MenuCardProps> = ({ item, onQuickView }) => {
       setIsFavorite(true);
     }
     localStorage.setItem('gotham_favorites', JSON.stringify(updated));
+    window.dispatchEvent(new Event('gotham_favorites_updated'));
   };
 
   return (

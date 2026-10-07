@@ -3,6 +3,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { getAvailableTables, createReservation } from '../../services/reservationService';
 import { RestaurantTable } from '../../types';
 import { Calendar, Clock, Users, MapPin, User, Phone, Mail, Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
+import { FloorPlanMap } from './FloorPlanMap';
 
 interface ReservationFormProps {
   onSuccess?: () => void;
@@ -186,7 +187,7 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ onSuccess }) =
 
       </div>
 
-      {/* Available Table Picker & Interactive Visual Floor Plan */}
+      {/* Interactive Visual Floor Plan Map */}
       <div className="space-y-4 pt-2">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider flex items-center gap-2">
@@ -204,115 +205,20 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({ onSuccess }) =
         </div>
 
         {loadingTables ? (
-          <p className="text-xs text-gray-500">Checking live table availability for {date} at {time}...</p>
+          <div className="p-8 text-center bg-dark-950 rounded-2xl border border-gray-800 text-xs text-gray-400">
+            Checking live table availability for {date} at {time}...
+          </div>
         ) : availableTables.length === 0 ? (
-          <p className="text-xs text-red-400 bg-red-500/10 p-3 rounded-xl border border-red-500/20">
+          <p className="text-xs text-red-400 bg-red-500/10 p-4 rounded-xl border border-red-500/20">
             No active tables available for {numberOfGuests} guests at {time} on {date}. Please try another time slot.
           </p>
         ) : (
-          <div className="space-y-4">
-            {/* Visual Floor Plan Zone Map */}
-            <div className="bg-dark-950/80 rounded-2xl p-5 border border-gold-500/20 space-y-4 shadow-inner">
-              <div className="flex items-center justify-between border-b border-gray-800/80 pb-3">
-                <span className="text-xs font-serif font-bold text-gold-400 uppercase tracking-widest flex items-center gap-2">
-                  <Sparkles className="w-3.5 h-3.5" /> Gotham Restaurant Floor Plan
-                </span>
-                <div className="flex items-center gap-4 text-[10px] text-gray-400">
-                  <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-emerald-400 shadow-sm shadow-emerald-500/50"></span> Available</span>
-                  <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-gold-500 border border-gold-400 shadow-sm shadow-gold-500/50"></span> Selected</span>
-                </div>
-              </div>
-
-              {/* Layout Map by Dining Zones */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                
-                {/* Zone 1: VIP Lounge & Private Chef Table */}
-                <div className="bg-dark-900/90 rounded-xl p-3.5 border border-amber-500/20 space-y-3">
-                  <div className="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center justify-between border-b border-gray-800 pb-2">
-                    <span>👑 VIP & Chef's Reserve</span>
-                    <span className="text-[9px] text-gray-500">Private Dining</span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {availableTables.filter(t => (t.location || '').includes('VIP') || (t.location || '').includes('Chef')).map((tbl) => (
-                      <button
-                        key={tbl._id}
-                        type="button"
-                        onClick={() => setSelectedTableId(tbl._id)}
-                        className={`p-3 rounded-lg border text-left transition transform hover:scale-105 ${
-                          selectedTableId === tbl._id
-                            ? 'bg-gold-500/25 border-gold-500 text-gold-300 ring-2 ring-gold-500/50'
-                            : 'bg-dark-800/80 border-gray-700 text-gray-300 hover:border-gold-500/40'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs">{tbl.tableNumber}</span>
-                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-semibold">{tbl.capacity} Seats</span>
-                        </div>
-                        <p className="text-[10px] text-gray-400 mt-1 truncate">{tbl.location}</p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Zone 2: Main Dining Room */}
-                <div className="bg-dark-900/90 rounded-xl p-3.5 border border-gold-500/20 space-y-3">
-                  <div className="text-[11px] font-bold text-gold-400 uppercase tracking-wider flex items-center justify-between border-b border-gray-800 pb-2">
-                    <span>🏛️ Main Dining Room</span>
-                    <span className="text-[9px] text-gray-500">Center Hall</span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {availableTables.filter(t => (t.location || '').includes('Main') || (!t.location)).map((tbl) => (
-                      <button
-                        key={tbl._id}
-                        type="button"
-                        onClick={() => setSelectedTableId(tbl._id)}
-                        className={`p-3 rounded-lg border text-left transition transform hover:scale-105 ${
-                          selectedTableId === tbl._id
-                            ? 'bg-gold-500/25 border-gold-500 text-gold-300 ring-2 ring-gold-500/50'
-                            : 'bg-dark-800/80 border-gray-700 text-gray-300 hover:border-gold-500/40'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs">{tbl.tableNumber}</span>
-                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-gold-500/20 text-gold-400 font-semibold">{tbl.capacity} Seats</span>
-                        </div>
-                        <p className="text-[10px] text-gray-400 mt-1 truncate">{tbl.location || 'Main Dining'}</p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Zone 3: Window Side & Patio Terrace */}
-                <div className="bg-dark-900/90 rounded-xl p-3.5 border border-sky-500/20 space-y-3">
-                  <div className="text-[11px] font-bold text-sky-400 uppercase tracking-wider flex items-center justify-between border-b border-gray-800 pb-2">
-                    <span>🌅 Window & Patio Terrace</span>
-                    <span className="text-[9px] text-gray-500">Skyline View</span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {availableTables.filter(t => (t.location || '').includes('Window') || (t.location || '').includes('Patio')).map((tbl) => (
-                      <button
-                        key={tbl._id}
-                        type="button"
-                        onClick={() => setSelectedTableId(tbl._id)}
-                        className={`p-3 rounded-lg border text-left transition transform hover:scale-105 ${
-                          selectedTableId === tbl._id
-                            ? 'bg-gold-500/25 border-gold-500 text-gold-300 ring-2 ring-gold-500/50'
-                            : 'bg-dark-800/80 border-gray-700 text-gray-300 hover:border-gold-500/40'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs">{tbl.tableNumber}</span>
-                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 font-semibold">{tbl.capacity} Seats</span>
-                        </div>
-                        <p className="text-[10px] text-gray-400 mt-1 truncate">{tbl.location}</p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
+          <FloorPlanMap
+            tables={availableTables}
+            selectedTableId={selectedTableId}
+            numberOfGuests={numberOfGuests}
+            onSelectTable={(id) => setSelectedTableId(id)}
+          />
         )}
       </div>
 

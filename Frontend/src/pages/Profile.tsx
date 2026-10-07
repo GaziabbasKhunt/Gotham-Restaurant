@@ -1,10 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { User, Mail, Phone, MapPin, Shield, Calendar, ShoppingBag, LogOut } from 'lucide-react';
+import { getMenuItems } from '../services/menuService';
+import { User, Mail, Phone, MapPin, Shield, Calendar, ShoppingBag, LogOut, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Profile: React.FC = () => {
   const { user, logout, isAdmin } = useAuth();
+  const [favoriteCount, setFavoriteCount] = useState<number>(0);
+
+  useEffect(() => {
+    const updateCount = async () => {
+      const saved: string[] = JSON.parse(localStorage.getItem('gotham_favorites') || '[]');
+      if (saved.length === 0) {
+        setFavoriteCount(0);
+        return;
+      }
+      try {
+        const res = await getMenuItems({ limit: 100 });
+        if (res.data) {
+          const validIds = new Set(res.data.map((item) => item._id));
+          const activeFavorites = saved.filter((id) => validIds.has(id));
+          setFavoriteCount(activeFavorites.length);
+        } else {
+          setFavoriteCount(saved.length);
+        }
+      } catch {
+        setFavoriteCount(saved.length);
+      }
+    };
+    updateCount();
+    window.addEventListener('gotham_favorites_updated', updateCount);
+    return () => window.removeEventListener('gotham_favorites_updated', updateCount);
+  }, []);
 
   if (!user) return null;
 
@@ -123,6 +150,21 @@ export const Profile: React.FC = () => {
 
         {/* Quick Navigation Cards */}
         <div className="space-y-4">
+          <Link
+            to="/menu"
+            className="glass-card rounded-2xl p-6 border border-gray-800 hover:border-red-500/40 transition flex items-center justify-between group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center group-hover:scale-110 transition">
+                <Heart className="w-6 h-6 fill-current" />
+              </div>
+              <div>
+                <h3 className="font-serif font-bold text-gray-100 group-hover:text-red-400 transition">My Favorite Dishes</h3>
+                <p className="text-gray-400 text-xs">{favoriteCount} saved favorite dish{favoriteCount === 1 ? '' : 'es'}</p>
+              </div>
+            </div>
+          </Link>
+
           <Link
             to="/my-orders"
             className="glass-card rounded-2xl p-6 border border-gray-800 hover:border-gold-500/40 transition flex items-center justify-between group"

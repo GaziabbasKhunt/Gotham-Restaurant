@@ -92,6 +92,7 @@ const seedDatabase = async () => {
 
     console.log('[Seed] Creating Menu Items...');
     const menuItemsData = [
+      // STARTERS
       {
         category: catMap.get('Starters'),
         name: 'Truffle & Burrata Bruschetta',
@@ -118,6 +119,47 @@ const seedDatabase = async () => {
         isActive: true,
         preparationTime: 15
       },
+      {
+        category: catMap.get('Starters'),
+        name: 'Pan-Seared Hokkaido Scallops',
+        description: 'Pan-seared Japanese scallops served over cauliflower purée, crispy prosciutto, and white wine lemon reduction.',
+        price: 520,
+        image: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&q=80&w=800',
+        ingredients: ['Hokkaido Scallops', 'Cauliflower Purée', 'Crispy Prosciutto', 'Lemon White Wine Reduction'],
+        isVegetarian: false,
+        isAvailable: true,
+        isFeatured: true,
+        isActive: true,
+        preparationTime: 15
+      },
+      {
+        category: catMap.get('Starters'),
+        name: 'Wild Forest Mushroom Soup',
+        description: 'Rich and velvety roasted wild mushroom soup with black truffle oil and freshly baked herb garlic crostini.',
+        price: 280,
+        image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=800',
+        ingredients: ['Porcini Mushrooms', 'Heavy Cream', 'Black Truffle Oil', 'Herb Crostini'],
+        isVegetarian: true,
+        isAvailable: true,
+        isFeatured: false,
+        isActive: true,
+        preparationTime: 12
+      },
+      {
+        category: catMap.get('Starters'),
+        name: 'Crispy Calamari Fritti',
+        description: 'Tender squid rings lightly dusted in seasoned flour, fried to golden perfection, served with spicy smoked paprika aioli.',
+        price: 360,
+        image: 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&q=80&w=800',
+        ingredients: ['Wild Squid', 'Smoked Paprika Aioli', 'Charred Lemon', 'Fresh Parsley'],
+        isVegetarian: false,
+        isAvailable: true,
+        isFeatured: false,
+        isActive: true,
+        preparationTime: 12
+      },
+
+      // MAIN COURSE
       {
         category: catMap.get('Main Course'),
         name: 'Prime Ribeye Steak (300g)',
@@ -158,6 +200,60 @@ const seedDatabase = async () => {
         preparationTime: 20
       },
       {
+        category: catMap.get('Main Course'),
+        name: 'Slow-Braised Black Angus Short Rib',
+        description: '12-hour braised beef short rib in Barolo red wine reduction, served with creamy polenta and glazed baby carrots.',
+        price: 920,
+        image: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?auto=format&fit=crop&q=80&w=800',
+        ingredients: ['Black Angus Short Rib', 'Barolo Red Wine', 'Creamy Polenta', 'Baby Carrots', 'Fresh Thyme'],
+        isVegetarian: false,
+        isAvailable: true,
+        isFeatured: true,
+        isActive: true,
+        preparationTime: 30
+      },
+      {
+        category: catMap.get('Main Course'),
+        name: 'Grilled Atlantic Salmon Fillet',
+        description: 'Crispy skin Atlantic salmon with dill caper butter sauce, crushed heirloom potatoes, and steamed broccolini.',
+        price: 780,
+        image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&q=80&w=800',
+        ingredients: ['Wild Atlantic Salmon', 'Dill Caper Butter', 'Heirloom Potatoes', 'Broccolini'],
+        isVegetarian: false,
+        isAvailable: true,
+        isFeatured: false,
+        isActive: true,
+        preparationTime: 20
+      },
+      {
+        category: catMap.get('Main Course'),
+        name: 'Roasted Rack of New Zealand Lamb',
+        description: 'Herb and Dijon-crusted New Zealand lamb chops with mint infused jus and roasted root vegetables.',
+        price: 980,
+        image: 'https://images.unsplash.com/photo-1603073163308-9654c3fb70b5?auto=format&fit=crop&q=80&w=800',
+        ingredients: ['New Zealand Lamb', 'Dijon Mustard', 'Fresh Rosemary', 'Mint Jus', 'Root Vegetables'],
+        isVegetarian: false,
+        isAvailable: true,
+        isFeatured: true,
+        isActive: true,
+        preparationTime: 25
+      },
+      {
+        category: catMap.get('Main Course'),
+        name: 'Truffle Tagliolini Cacio e Pepe',
+        description: 'Handmade egg tagliolini tossed with Pecorino Romano, coarse cracked black pepper, and shaved fresh black truffle.',
+        price: 460,
+        image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&q=80&w=800',
+        ingredients: ['Handmade Pasta', 'Pecorino Romano', 'Tellicherry Black Pepper', 'Fresh Black Truffle'],
+        isVegetarian: true,
+        isAvailable: true,
+        isFeatured: false,
+        isActive: true,
+        preparationTime: 18
+      },
+
+      // ARTISANAL PIZZA
+      {
         category: catMap.get('Artisanal Pizza'),
         name: 'Tartufata & Fior di Latte Pizza',
         description: 'Black truffle cream base, Fior di Latte mozzarella, wild oyster mushrooms, fresh thyme, and sea salt.',
@@ -183,6 +279,34 @@ const seedDatabase = async () => {
         isActive: true,
         preparationTime: 18
       },
+      {
+        category: catMap.get('Artisanal Pizza'),
+        name: 'Quattro Formaggi & Honey Drizzle',
+        description: 'Mozzarella di Bufala, Gorgonzola Dolce, Smoked Provola, Parmigiano, finished with wildflower truffle honey.',
+        price: 460,
+        image: 'https://images.unsplash.com/photo-1573821663912-569905455b1c?auto=format&fit=crop&q=80&w=800',
+        ingredients: ['Mozzarella di Bufala', 'Gorgonzola', 'Provola', 'Parmigiano', 'Truffle Honey'],
+        isVegetarian: true,
+        isAvailable: true,
+        isFeatured: false,
+        isActive: true,
+        preparationTime: 16
+      },
+      {
+        category: catMap.get('Artisanal Pizza'),
+        name: 'Prosciutto di Parma & Arugula',
+        description: 'San Marzano base, fresh Fior di Latte, aged Prosciutto di Parma, wild arugula, and shaved Parmesan flakes.',
+        price: 520,
+        image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80&w=800',
+        ingredients: ['San Marzano Tomato', 'Prosciutto di Parma', 'Wild Arugula', 'Parmesan Flakes'],
+        isVegetarian: false,
+        isAvailable: true,
+        isFeatured: true,
+        isActive: true,
+        preparationTime: 18
+      },
+
+      // DESSERTS
       {
         category: catMap.get('Desserts'),
         name: 'Valrhona Chocolate Fondant',
@@ -210,6 +334,34 @@ const seedDatabase = async () => {
         preparationTime: 10
       },
       {
+        category: catMap.get('Desserts'),
+        name: 'Pistachio & White Chocolate Cannoli',
+        description: 'Crispy Sicilian pastry shells filled with sweetened ricotta, white chocolate chips, and crushed Sicilian pistachios.',
+        price: 270,
+        image: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&q=80&w=800',
+        ingredients: ['Sicilian Cannoli Shell', 'Sweet Ricotta', 'Bronte Pistachios', 'White Chocolate'],
+        isVegetarian: true,
+        isAvailable: true,
+        isFeatured: false,
+        isActive: true,
+        preparationTime: 10
+      },
+      {
+        category: catMap.get('Desserts'),
+        name: 'Vanilla Bean Panna Cotta',
+        description: 'Silky smooth Madagascar vanilla bean panna cotta served with wild blackberry coulis and edible gold leaf.',
+        price: 250,
+        image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&q=80&w=800',
+        ingredients: ['Heavy Cream', 'Madagascar Vanilla Bean', 'Wild Blackberry Coulis', 'Gold Leaf'],
+        isVegetarian: true,
+        isAvailable: true,
+        isFeatured: false,
+        isActive: true,
+        preparationTime: 10
+      },
+
+      // COCKTAILS
+      {
         category: catMap.get('Cocktails'),
         name: 'Gotham Dark Knight Smoked Old Fashioned',
         description: 'Bourbon whiskey infused with charred oak smoke, Angostura bitters, orange peel, and maraschino cherry.',
@@ -221,6 +373,32 @@ const seedDatabase = async () => {
         isFeatured: true,
         isActive: true,
         preparationTime: 8
+      },
+      {
+        category: catMap.get('Cocktails'),
+        name: 'Gotham Royal Velvet Espresso Martini',
+        description: 'Belvedere vodka, freshly pulled Gotham espresso, Kahlúa liqueur, and dark chocolate cocoa nibs.',
+        price: 350,
+        image: 'https://images.unsplash.com/photo-1545438102-799c3991ffb2?auto=format&fit=crop&q=80&w=800',
+        ingredients: ['Belvedere Vodka', 'Fresh Espresso', 'Kahlúa', 'Dark Chocolate Nibs'],
+        isVegetarian: true,
+        isAvailable: true,
+        isFeatured: false,
+        isActive: true,
+        preparationTime: 6
+      },
+      {
+        category: catMap.get('Cocktails'),
+        name: 'Smoked Rosemary Mezcalita',
+        description: 'Artisanal Mezcal, fresh lime juice, agave nectar, smoked rosemary sprig, and black lava salt rim.',
+        price: 370,
+        image: 'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&q=80&w=800',
+        ingredients: ['Artisanal Mezcal', 'Fresh Lime', 'Agave Nectar', 'Smoked Rosemary', 'Black Lava Salt'],
+        isVegetarian: true,
+        isAvailable: true,
+        isFeatured: true,
+        isActive: true,
+        preparationTime: 7
       }
     ];
 
